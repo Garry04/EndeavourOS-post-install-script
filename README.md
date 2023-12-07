@@ -1,2 +1,4 @@
 # EndeavourOS-post-install-script
-THIS SCRIPT IS UNDER DEVELOPMENT DONT USE IT!
+###############################################
+#THIS SCRIPT IS UNDER DEVELOPMENT DONT USE IT!#
+###############################################
