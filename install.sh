@@ -1,9 +1,19 @@
 #!/bin/bash
+############################
+##ENDEAVOUR INSTALL SCRIPT##
+############################
+# By Garry
+
+
+
+version="0.1"
+
 c1="\e[38;5;63m"
 gray="\e[38;5;242m"
 green='\033[0;32m'
 white='\033[0m'
 
+#ascii art by dylanaraps
 endeavour_logo="
       ${c1}/\\
     ${c1}//  \\
@@ -26,13 +36,13 @@ ${c1} /_-''    ''-_\\
 
 username=$(whoami)
 echo "Hello, $username :3"
-echo -e "${gray}Version 0.1"
+echo -e "${gray}$version"
 sleep 0.2
 
 if [ -e /etc/os-release ]; then
     source /etc/os-release
     if [ "$ID" == "endeavouros" ]; then
-        echo -e "$arch_logo"
+        echo -e "$endeavour_logo"
     else
         # Message for other distributions
         echo -e "\e[1;31mEndeavourOS wasn't detected! This script hasnt been tested on other Arch based distributions use at your own risk.\e[0m"
@@ -46,6 +56,7 @@ fi
 # Check if NVIDIA GPU is present
 if lspci | grep -i nvidia &> /dev/null; then
     echo -e "\e[1;31mNVIDIA GPU detected, no nvidia drivers were installed currently working on adding this meanwhile please go to https://wiki.archlinux.org/title/NVIDIA\e[0m"
+    echo "Script will continue in 8 seconds."
     sleep 8
     # Add your NVIDIA-specific commands here
 elif lspci | grep -i amd &> /dev/null; then
@@ -56,7 +67,7 @@ elif lspci | grep -i amd &> /dev/null; then
 else
     echo "No NVIDIA or AMD GPU detected."
 fi
-
+clear
 
 # Select the AUR helper
 echo "Choose AUR helper:"
@@ -64,6 +75,10 @@ echo "1. paru (recommended)"
 echo "2. yay"
 
 read -r -p "Enter the number of the AUR helper you want to use (1-2): " aur_choice
+
+if [[ -z "$aur_choice" ]]; then
+    aur_choice=1
+fi
 
 case $aur_choice in
     1)
@@ -73,7 +88,7 @@ case $aur_choice in
             # Add the command to install paru here
             sudo pacman -S --needed base-devel
             git clone https://aur.archlinux.org/paru.git
-            cd paru
+            cd paru 
             makepkg -si
         else
             echo "paru is already installed."
@@ -95,7 +110,7 @@ case $aur_choice in
         ;;
 esac
 
-
+clear
 # Function to install a terminal based on user choice
 install_terminal() {
     case $1 in
@@ -135,7 +150,7 @@ read -r -p "Enter the number of your choice: " choice
 install_terminal $choice
 
 
-
+clear
 # Function to install network tools
 install_tool() {
     tool=$1
@@ -175,7 +190,6 @@ packages=("lutris" "vlc" "neofetch" "kfind" "flameshot" "curl" "wget" "tar")
 
 parPack=( "qbittorrent" "discord" "librewolf" "heroic-games-launcher" "protonup-qt" "timeshift-autosnap")
 
-# Update package database
 sudo pacman -Syyu
 
 # Install required packages
@@ -223,6 +237,7 @@ echo "Firewall setup complete."
 
 #install config
 while true; do
+    clear
     echo "Choose customization options (enter the corresponding numbers, separate with spaces):"
     echo -e "1. Full - install everything"
     echo -e "2. Bash config - installs custom bashrc with improved ls and aliases"
@@ -340,7 +355,7 @@ read -r -p "You need to reboot to apply changes, do you want to reboot now? (y/n
 
 if [ "$answer" == "y" ]; then
     echo "Rebooting..."
-    #reboot
+    reboot
 else
     echo "You chose not to reboot. Changes will take effect after the next restart."
 fi
