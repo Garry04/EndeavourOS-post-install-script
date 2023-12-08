@@ -1,6 +1,6 @@
 # EndeavourOS-post-install-script
 
-***THIS SCRIPT IS UNDER DEVELOPMENT. DO NOT USE IT!***
+**THIS SCRIPT IS UNDER DEVELOPMENT. DO NOT USE IT!**
 
 Credit: dylanaraps (ascii art)
 
