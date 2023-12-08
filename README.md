@@ -1,4 +1,4 @@
-# EndeavourOS post install script
+# EndeavourOS Post Install Script
 
 **THIS SCRIPT IS UNDER DEVELOPMENT. DO NOT USE IT!**
 
