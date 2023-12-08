@@ -1,0 +1,6 @@
+- More descriptions
+- More echos
+- More failsafes
+- Option to apply performance tweaks
+- auo numlock
+- firewalld config

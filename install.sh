@@ -12,6 +12,8 @@ c1="\e[38;5;63m"
 gray="\e[38;5;242m"
 green='\033[0;32m'
 white='\033[0m'
+red="\e[31m"
+resetC="\e[0m"
 
 #ascii art by dylanaraps
 endeavour_logo="
@@ -233,7 +235,77 @@ fi
 echo "Installing ldns for secure dns servers..."
 sudo pacman -S --noconfirm rkhunter ldns
 echo "Firewall setup complete."
+clear
 
+###################
+#INSTALLING KERNEL#
+###################
+promptCachyOSRepo() {
+    clear
+    read -p "The CachyOS Kernel includes its repository. Do you want to include the CachyOS repository? (y/n): " include_repo
+
+    if [ "$include_repo" == "y" ]; then
+        echo "Installing CachyOS kernel & repository..."
+        wget https://mirror.cachyos.org/cachyos-repo.tar.xz
+        tar xvf cachyos-repo.tar.xz && cd cachyos-repo
+        sudo ./cachyos-repo.sh
+    else
+        echo "Skipping CachyOS repository inclusion."
+        sleep 0.1
+        clear
+        chooseKernel
+    fi
+}
+
+chooseKernel() {
+    local kernel_choice
+
+    while true; do
+        echo "Choose an additional kernel to install:"
+        echo -e "1. Nobara - ${gray}A performance-focused kernel with cherry-picked patches from zen and tkg.\e[0m"
+        echo -e "2. Zen - ${gray}Optimized for desktop and gaming usage.\e[0m"
+        echo -e "3. Liquorix - ${gray}Designed for low-latency and multimedia production.\e[0m"
+        echo -e "4. CachyOS - ${gray}A gaming-oriented kernel with extra optimizations.\e[0m"
+        echo -e "5. None - ${gray}Wont install anything.\e[0m"
+
+        read -p "Enter the number of the kernel you want to install (1-5): " kernel_choice
+
+        case $kernel_choice in
+            1)
+                echo "Installing Nobara Kernel..."
+                $aur -S linux-fsync-nobara-bin
+                ;;
+            2)
+                echo "Installing Zen Kernel..."
+                sudo pacman -S linux-zen linux-zen-headers
+                ;;
+            3)
+                echo "Installing Liquorix Kernel..."
+                curl -s 'https://liquorix.net/install-liquorix.sh' | sudo bash
+                ;;
+            4)
+                echo "Installing CachyOS Kernel..."
+                promptCachyOSRepo
+                ;;
+            5)
+                echo "No kernel was installed."
+                ;;
+            *)
+                clear
+                echo -e "${red}Invalid choice. Please choose a valid option (1-5).${resetC}"
+                ;;
+        esac
+    done
+}
+
+read -p "Do you want to install an additional kernel? (y/n): " proceed_to_kernel
+
+if [ "$proceed_to_kernel" == "y" ]; then
+    clear
+    chooseKernel
+else
+    echo "Continuing with the rest of the script."
+fi
 
 #install config
 while true; do
