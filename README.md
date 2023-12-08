@@ -8,7 +8,7 @@ Credit: dylanaraps (ascii art)
 **This script is made for EndeavourOS and hasn't been tested on other Arch-based distributions. Currently, it doesn't have support for Nvidia drivers, but I'm working on fixing this. Everything else should install just fine.**
 
 ## FEATURES
-- Various performance and latency improvements
+- Various performance and latency improvements (Optional)
 - Sets dns servers to only use secure ones to prevent malicious dns servers
 - Customization options
 - Installs necessary GPU drivers (Except for Nvidia at the moment)
