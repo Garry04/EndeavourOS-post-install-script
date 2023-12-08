@@ -2,7 +2,7 @@
 
 **THIS SCRIPT IS UNDER DEVELOPMENT. DO NOT USE IT!**
 
-Credit: dylanaraps (ascii art)
+Credit: jschx (ascii art)
 
 ## NOTE
 **This script is made for EndeavourOS and hasn't been tested on other Arch-based distributions. Currently, it doesn't have support for Nvidia drivers, but I'm working on fixing this. Everything else should install just fine.**
