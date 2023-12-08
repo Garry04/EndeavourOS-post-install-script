@@ -40,7 +40,7 @@ ${c1} /_-''    ''-_\\
 username=$(whoami)
 echo "Hello, $username :3"
 echo -e "${gray}$version"
-sleep 0.2
+sleep 0.5
 
 if [ -e /etc/os-release ]; then
     source /etc/os-release
@@ -338,7 +338,7 @@ clear
 ###################
 promptCachyOSRepo() {
     clear
-    read -p "The CachyOS Kernel includes its repository. Do you want to include the CachyOS repository? (y/n): " include_repo
+    read -r -p "The CachyOS Kernel includes its repository. Do you want to include the CachyOS repository? (y/n): " include_repo
 
     if [ "$include_repo" == "y" ]; then
         echo "Installing CachyOS kernel & repository..."
@@ -364,7 +364,7 @@ chooseKernel() {
         echo -e "4. CachyOS - ${gray}A gaming-oriented kernel with extra optimizations.\e[0m"
         echo -e "5. None - ${gray}Wont install anything.\e[0m"
 
-        read -p "Enter the number of the kernel you want to install (1-5): " kernel_choice
+        read -r -p "Enter the number of the kernel you want to install (1-5): " kernel_choice
 
         case $kernel_choice in
             1)
@@ -394,7 +394,7 @@ chooseKernel() {
     done
 }
 
-read -p "Do you want to install an additional kernel? (y/n): " proceed_to_kernel
+read -r -p "Do you want to install an additional kernel? (y/n): " proceed_to_kernel
 
 if [ "$proceed_to_kernel" == "y" ]; then
     clear
@@ -403,16 +403,65 @@ else
     echo "Continuing with the rest of the script."
 fi
 
+confBash() {
+    echo "Installing Bash configuration..."
+    mv .bashrc "/home/$USER/"
+    $aur -S --noconfirm eza ugrep
+
+}
+
+confWall() {
+    echo "Installing Wallpapers in /Pictures/Wallpapers..."
+    sleep 0.5
+    mv Wallpapers "/home/$USER/Pictures/"
+    mv plasma-org.kde.plasma.desktop-appletsrc "/home/$USER/.config/"
+#                qdbus org.kde.plasmashell /PlasmaShell org.kde.PlasmaShell.evaluateScript '
+ #                   var allDesktops = desktops();
+  #                  print (allDesktops);
+   ##                    d = allDesktops[i];
+     #                   d.wallpaperPlugin = "org.kde.image";
+      #                  d.currentConfigGroup = Array("Wallpaper",
+       #                                             "org.kde.image",
+        #                                            "General");
+         #               d.writeConfig("Image", "file:/home/$USER/Pictures/Wallpapers/wallhaven_T5_Shizuka_Hoshijiro.png")
+          #          }}
+           #     '
+
+}
+
+confDesktop() {
+    echo "Installing Full customization..."
+    echo "Applying kwin settings & taskbar settings..."
+    echo "Installing Desktop..."
+    mv kwinrc "/home/$USER/.config/"
+    mv plasma-org.kde.plasma.desktop-appletsrc "/home/$USER/.config/"
+    mv Carl.colors "/home/$USER/.local/share/color-schemes"
+    echo "Installing icons..."
+    $aur -S --noconfirm eza ugrep
+    $aur -S --noconfirm kora-icon-theme
+}
+
+confStarship() {
+    echo "Installing Starship shell configuration..."
+    sudo pacman -S --no-comfirm starship
+    mv starship.toml "/home/$USER/.config/"
+
+}
+confNeofetch() {
+    echo "Installing neofetch configuration..."
+    mv config.conf "/home/$USER/.config/neofetch/"
+}
+
 #install config
 while true; do
     clear
-    echo "Choose customization options (enter the corresponding numbers, separate with spaces):"
-    echo -e "1. Full - install everything"
-    echo -e "2. Bash config - installs custom bashrc with improved ls and aliases"
-    echo -e "3. Wallpapers - installs a few wallpapers"
-    echo -e "4. Desktop - installs my kde desktop config, conky, taskbar etc.."
-    echo -e "5. starship shell - installs a custom starship shell"
-    echo -e "6. neofetch config - installs a custom neofetch config"
+    echo "Choose customization options (e.g., 1, 2 3):"
+    echo -e "1. Full ${red}(KDE)- ${gray}install everything${resetC}"
+    echo -e "2. Bash config - ${gray}installs custom bashrc with improved ls and aliases${resetC}"
+    echo -e "3. Wallpapers - ${gray}installs a few wallpapers${resetC}"
+    echo -e "4. Desktop ${red} - ${gray}installs my kde desktop config, conky, taskbar etc..${resetC}"
+    echo -e "5. starship shell - ${gray}installs a custom starship shell"
+    echo -e "6. neofetch config - ${gray}installs a custom neofetch config${resetC}"
 
     read -r -p "Enter the numbers of the customization options you want to install (1-6): " customization_choices
 
@@ -440,73 +489,26 @@ while true; do
     for choice in $customization_choices; do
         case $choice in
             1)
-                echo "Installing Full customization..."
-
-                echo "Applying kwin settings & taskbar settings..."
-                mv kwinrc "/home/$USER/.config/"
-                mv plasma-org.kde.plasma.desktop-appletsrc "/home/$USER/.config/"
-                echo "Applying all terminal configs..."
-                sudo pacman -S starship
-                mv starship.toml "/home/$USER/.config/"
-                mv .bashrc "/home/$USER/"
-                mv config.conf "/home/$USER/.config/neofetch/"
-                echo "Installing wallpapers in /Pictures/Wallpapers..."
-                sleep 0.2
-                mv Wallpapers "/home/$USER/Pictures/"
-                #qdbus org.kde.plasmashell /PlasmaShell org.kde.PlasmaShell.evaluateScript '
-                #    var allDesktops = desktops();
-                #    print (allDesktops);
-                #    for (i=0;i<allDesktops.length;i++) {{
-                #        d = allDesktops[i];
-                #        d.wallpaperPlugin = "org.kde.image";
-                #        d.currentConfigGroup = Array("Wallpaper",
-                #                                    "org.kde.image",
-                #                                    "General");
-                #        d.writeConfig("Image", "file:/home/$USER/Pictures/Wallpapers/wallhaven_T5_Shizuka_Hoshijiro.png")
-                #    }}
-                #'
-                echo "Applying color scheme..."
-                mv Carl.colors "/home/$USER/.local/share/color-schemes"
-                echo "Installing icons..."
-                $aur -S --noconfirm eza ugrep
-                $aur -S --noconfirm kora-icon-theme
+                confBash
+                confWall
+                confDesktop
+                confStarship
+                confNeofetch
                 ;;
             2)
-                echo "Installing Bash config..."
-                mv .bashrc "/home/$USER/"
-                $aur -S --noconfirm eza ugrep
-
+                confBash
                 ;;
             3)
-                echo "Installing Wallpapers in /Pictures/Wallpapers..."
-                sleep 0.2
-                mv Wallpapers "/home/$USER/Pictures/"
-                mv plasma-org.kde.plasma.desktop-appletsrc "/home/$USER/.config/"
-#                qdbus org.kde.plasmashell /PlasmaShell org.kde.PlasmaShell.evaluateScript '
- #                   var allDesktops = desktops();
-  #                  print (allDesktops);
-   ##                    d = allDesktops[i];
-     #                   d.wallpaperPlugin = "org.kde.image";
-      #                  d.currentConfigGroup = Array("Wallpaper",
-       #                                             "org.kde.image",
-        #                                            "General");
-         #               d.writeConfig("Image", "file:/home/$USER/Pictures/Wallpapers/wallhaven_T5_Shizuka_Hoshijiro.png")
-          #          }}
-           #     '
+                confWall
                 ;;
-            4)s
-                echo "Installing Desktop..."
-                mv kwinrc "/home/$USER/.config/"
-                mv plasma-org.kde.plasma.desktop-appletsrc "/home/$USER/.config/"
+            4)
+                confDesktop
                 ;;
             5)
-                echo "Installing starship shell config..."
-                sudo pacman -S --no-comfirm starship
-                mv starship.toml "/home/$USER/.config/"
+                confStarship
                 ;;
             6)
-                echo "Installing neofetch config..."
-                mv config.conf "/home/$USER/.config/neofetch/"
+                confNeofetch
                 ;;
 
         esac
