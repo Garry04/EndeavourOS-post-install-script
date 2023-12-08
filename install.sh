@@ -1,4 +1,5 @@
 #!/bin/bash
+
 ############################
 ##ENDEAVOUR INSTALL SCRIPT##
 ############################
@@ -70,50 +71,107 @@ else
     echo "No NVIDIA or AMD GPU detected."
 fi
 clear
+installParu() {
+    echo "Installing paru..."
+    # Add the command to install paru here
+    sudo pacman -S --needed base-devel
+    git clone https://aur.archlinux.org/paru.git
+    cd paru
+    makepkg -si
+}
 
-# Select the AUR helper
-echo "Choose AUR helper:"
-echo "1. paru (recommended)"
-echo "2. yay"
+# Function to install yay
+installYay() {
+    echo "Installing yay..."
+    # Add the command to install yay here
+    sudo pacman -S yay
+}
 
-read -r -p "Enter the number of the AUR helper you want to use (1-2): " aur_choice
+#################################
+# Function to select AUR helper #
+#################################
 
-if [[ -z "$aur_choice" ]]; then
-    aur_choice=1
-fi
+selectAurHelper() {
+    local aur_choice
+    local aur_installed
 
-case $aur_choice in
-    1)
-        aur="paru"
-        if ! command -v paru &> /dev/null; then
-            echo "Installing paru..."
-            # Add the command to install paru here
-            sudo pacman -S --needed base-devel
-            git clone https://aur.archlinux.org/paru.git
-            cd paru 
-            makepkg -si
-        else
-            echo "paru is already installed."
+    while true; do
+        echo "Choose AUR helper:"
+        echo -e "${gray}Default (1)${resetC}"
+        echo -e "1. paru - ${gray}Written in Rust, a memory-safe language${resetC}"
+        echo -e "2. yay - ${gray}Written in Go${resetC}"
+        echo "3. I already have one"
+
+        read -r -p "(1-3): " aur_choice
+
+        if [[ -z "$aur_choice" ]]; then
+            aur_choice=1
         fi
-        ;;
-    2)
-        aur="yay"
-        if ! command -v yay &> /dev/null; then
-            echo "Installing yay..."
-            # Add the command to install yay here
-            sudo pacman -S yay
+
+        case $aur_choice in
+            1)
+                aur_installed="paru"
+                if ! command -v paru &> /dev/null; then
+                    installParu
+                else
+                    clear
+                    echo "paru is already installed."
+                fi
+                ;;
+            2)
+                aur_installed="yay"
+                if ! command -v yay &> /dev/null; then
+                    installYay
+                else
+                    echo "yay is already installed."
+                fi
+                ;;
+            3)
+                # Detect which AUR helper is already installed
+                if command -v yay &> /dev/null && command -v paru &> /dev/null; then
+                    clear
+                    echo "Both yay and paru are installed. Defaulting to paru."
+                    aur_installed="paru"
+                elif command -v yay &> /dev/null; then
+                    clear
+                    echo "Pay was detected."
+                    aur_installed="yay"
+                elif command -v paru &> /dev/null; then
+                    clear
+                    echo "Paru was detected."
+                    aur_installed="paru"
+                else
+                    echo -e "${red}No AUR helper detected.${resetC}"
+                fi
+                ;;
+            *)
+                clear
+                echo -e "${red}Invalid choice for AUR helper.${resetC}"
+                ;;
+        esac
+
+        if [[ -n "$aur_installed" ]]; then
+            break
         else
-            echo "yay is already installed."
+            echo -e "${red}Please choose a valid AUR helper.${resetC}"
         fi
-        ;;
-    *)
-        echo "Invalid choice for AUR helper. Exiting."
-        exit 1
-        ;;
-esac
+    done
+    aur="$aur_installed"
+   
+}
+
+# Call the function to select AUR helper
+selectAurHelper
+
+echo "Selected AUR helper: $aur"
+sleep 1.5
 
 clear
-# Function to install a terminal based on user choice
+
+######################################################
+# Function to install a terminal based on user choice#
+######################################################
+
 install_terminal() {
     case $1 in
         1)
@@ -125,65 +183,103 @@ install_terminal() {
             sudo pacman -S kitty
             ;;
         3)
-            echo "Installing alacrtity..."
+            echo "Installing alacritty..."
             sudo pacman -S alacritty
             mv alacritty.yml "/home/$USER/.config/alacritty/"
             ;;
         4)
-            echo "No terminal was installed"
+            echo "No terminal was installed."
             ;;
         *)
-            echo "Invalid choice. No terminal installed."
+            clear
+            echo -e "${red}Invalid choice. Please choose a valid option (1-4).${resetC}"
+            return 1
             ;;
     esac
 }
 
-# Display menu to the user
-echo "Select a terminal to install:"
-echo "1. xterm"
-echo "2. kitty"
-echo "3. alacritty"
-echo "4. none"
+# Loop to handle invalid choices
+while true; do
+    # Display menu to the user
+    echo "Select a terminal to install:"
+    echo "1. xterm"
+    echo "2. kitty"
+    echo "3. alacritty"
+    echo "4. none"
 
-# Read user input
-read -r -p "Enter the number of your choice: " choice
+    # Read user input
+    read -r -p "Enter the number of your choice: " choice
 
-# Call the install_terminal function with the user's choice
-install_terminal $choice
+    # Call the install_terminal function with the user's choice
+    install_terminal "$choice"
+
+    # Check the return value of install_terminal
+    if [ $? -eq 0 ]; then
+        break  # Break the loop if a valid choice is made
+    fi
+done
+
 
 
 clear
 # Function to install network tools
 install_tool() {
     tool=$1
-    sudo pacman -S --noconfirm $tool
+    sudo pacman -S --noconfirm "$tool"
     echo "$tool installed successfully."
 }
 
-read -r -p "Do you want to install network tools? (y/n): " install_choice
+while true; do
+    read -r -p "Do you want to install network tools? (y/n): " install_choice
 
-if [[ $install_choice == "y" ]]; then
-    echo "Select the tools you want to install:"
-    echo "1. nmap"
-    echo "2. bettercap"
-    echo "3. wireshark"
+    # Default to "y" if the user presses Enter without providing any input
+    install_choice=${install_choice:-"y"}
 
-    read -r -p "Enter the numbers of the tools you want to install (e.g., 1 2, 3): " choices
+    if [[ $install_choice == "y" ]]; then
+        while true; do
+            echo "Select the tools you want to install:"
+            echo " "
+            echo "1. ALL"
+            echo "2. Nmap"
+            echo "3. Bettercap"
+            echo "4. Wireshark"
 
-    choices_arr=($choices)
-    for choice in "${choices_arr[@]}"; do
-        case $choice in
-            1) install_tool "nmap" ;;
-            2) install_tool "bettercap" ;;
-            3) install_tool "wireshark-qt" ;;
-            *) echo "Invalid choice: $choice. Skipping." ;;
-        esac
-    done
+            read -r -p "Enter the numbers of the tools you want to install (e.g., 1 2, 3): " choices
 
-    echo "Network tools installation complete."
-else
-    echo "Skipping network tools installation"
-fi
+            if [[ -z $choices ]]; then
+                # If the user presses Enter with no input, default to installing the first option
+                choices="1"
+            fi
+
+            invalid_input=false
+            choices_arr=($choices)
+            for choice in "${choices_arr[@]}"; do
+                case $choice in
+                    1) sudo pacman -S --noconfirm nmap bettcap wireshark-qt ;;
+                    2) install_tool "nmap" ;;
+                    3) install_tool "bettercap" ;;
+                    4) install_tool "wireshark-qt" ;;
+                    *) clear ; echo "Invalid choice: $choice." ; invalid_input=true ;;
+                esac
+            done
+
+            if [[ "$invalid_input" == false ]]; then
+                echo "Network tools installation complete."
+                break
+            else
+                clear
+                echo "Please provide valid input."
+            fi
+        done
+        break
+    elif [[ $install_choice == "n" ]]; then
+        echo "Skipping network tools installation."
+        break
+    else
+        clear
+        echo "Invalid input. Please enter 'y' or 'n'."
+    fi
+done
 
 
 

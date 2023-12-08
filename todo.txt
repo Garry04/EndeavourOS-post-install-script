@@ -4,3 +4,4 @@
 - Option to apply performance tweaks
 - auo numlock
 - firewalld config
+- detect if user is using bluethooth
