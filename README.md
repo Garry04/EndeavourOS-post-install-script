@@ -1,4 +1,4 @@
-# EndeavourOS-post-install-script
+# EndeavourOS post install script
 
 **THIS SCRIPT IS UNDER DEVELOPMENT. DO NOT USE IT!**
 
@@ -12,7 +12,7 @@ Credit: dylanaraps (ascii art)
 - Sets dns servers to only use secure ones to prevent malicious dns servers
 - Customization options
 - Installs necessary GPU drivers (Except for Nvidia at the moment)
-- numlock enable by default
+- Numlock enabled by default
 
 
 ![kde](https://github.com/Garry04/EndeavourOS-post-install-script/assets/54540935/a156c3dc-41cb-4df8-8c84-01dcfbc43baa)
