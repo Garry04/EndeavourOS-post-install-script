@@ -31,13 +31,13 @@ if [ -e /etc/os-release ]; then
         echo -e "\e[1;31mEndeavourOS wasn't detected! This script hasnt been tested on other Arch based distributions use at your own risk.\e[0m"
     fi
 else
-    echo "\e[1;31mEndeavourOS wasn't detected! This script hasnt been tested on other Arch based distributions use at your own risk.\e[0m"
+    echo -e "\e[1;31mEndeavourOS wasn't detected! This script hasnt been tested on other Arch based distributions use at your own risk.\e[0m"
 fi
 
 # add nvidia support
 # Check if NVIDIA GPU is present
 if lspci | grep -i nvidia &> /dev/null; then
-    echo "\e[1;31mNVIDIA GPU detected, no nvidia drivers were installed currently working on adding this meanwhile please go to https://wiki.archlinux.org/title/NVIDIA\e[0m"
+    echo -e "\e[1;31mNVIDIA GPU detected, no nvidia drivers were installed currently working on adding this meanwhile please go to https://wiki.archlinux.org/title/NVIDIA\e[0m"
     sleep 8
     # Add your NVIDIA-specific commands here
 elif lspci | grep -i amd &> /dev/null; then
@@ -55,7 +55,7 @@ echo "Choose AUR helper:"
 echo "1. paru (recommended)"
 echo "2. yay"
 
-read -p "Enter the number of the AUR helper you want to use (1-2): " aur_choice
+read -r -p "Enter the number of the AUR helper you want to use (1-2): " aur_choice
 
 case $aur_choice in
     1)
@@ -106,6 +106,7 @@ install_terminal() {
             ;;
         4)
             echo "No terminal was installed"
+            ;;
         *)
             echo "Invalid choice. No terminal installed."
             ;;
@@ -120,7 +121,7 @@ echo "3. alacritty"
 echo "4. none"
 
 # Read user input
-read -p "Enter the number of your choice: " choice
+read -r -p "Enter the number of your choice: " choice
 
 # Call the install_terminal function with the user's choice
 install_terminal $choice
@@ -134,16 +135,15 @@ install_tool() {
     echo "$tool installed successfully."
 }
 
-read -p "Do you want to install network tools? (y/n): " install_choice
+read -r -p "Do you want to install network tools? (y/n): " install_choice
 
 if [[ $install_choice == "y" ]]; then
     echo "Select the tools you want to install:"
     echo "1. nmap"
     echo "2. bettercap"
     echo "3. wireshark"
-    echo "4. bettercap"
 
-    read -p "Enter the numbers of the tools you want to install (e.g., 1 2, 3): " choices
+    read -r -p "Enter the numbers of the tools you want to install (e.g., 1 2, 3): " choices
 
     choices_arr=($choices)
     for choice in "${choices_arr[@]}"; do
@@ -151,7 +151,6 @@ if [[ $install_choice == "y" ]]; then
             1) install_tool "nmap" ;;
             2) install_tool "bettercap" ;;
             3) install_tool "wireshark-qt" ;;
-            4) install_tool "bettercap"
             *) echo "Invalid choice: $choice. Skipping." ;;
         esac
     done
@@ -164,7 +163,7 @@ fi
 
 
 # Array of packages to install
-packages=("lutris" "vlc" "neofetch" "kfind" "ufw" "gufw" "rkhunter" "flameshot" "curl" "wget" "tar" "ldns")
+packages=("lutris" "vlc" "neofetch" "kfind" "flameshot" "curl" "wget" "tar")
 
 parPack=( "qbittorrent" "discord" "librewolf" "heroic-games-launcher" "protonup-qt" "timeshift-autosnap")
 
@@ -188,7 +187,7 @@ echo "Now applying config"
 ##########################
 #INSTALLING SECURITY SHIT#
 ##########################
-
+echo "Installing firewall..."
 command_exists() {
     command -v "$1" >/dev/null 2>&1
 }
@@ -209,7 +208,8 @@ else
     sudo pacman -S --noconfirm firewalld
     sudo systemctl enable --now firewalld
 fi
-
+echo "Installing ldns for secure dns servers..."
+sudo pacman -S --noconfirm rkhunter ldns
 echo "Firewall setup complete."
 
 
@@ -223,7 +223,7 @@ while true; do
     echo -e "5. starship shell - installs a custom starship shell"
     echo -e "6. neofetch config - installs a custom neofetch config"
 
-    read -p "Enter the numbers of the customization options you want to install (1-6): " customization_choices
+    read -r -p "Enter the numbers of the customization options you want to install (1-6): " customization_choices
 
     # Check if all choices are valid
     valid_choices=true
@@ -262,18 +262,18 @@ while true; do
                 echo "Installing wallpapers in /Pictures/Wallpapers..."
                 sleep 0.2
                 mv Wallpapers "/home/$USER/Pictures/"
-                qdbus org.kde.plasmashell /PlasmaShell org.kde.PlasmaShell.evaluateScript '
-                    var allDesktops = desktops();
-                    print (allDesktops);
-                    for (i=0;i<allDesktops.length;i++) {{
-                        d = allDesktops[i];
-                        d.wallpaperPlugin = "org.kde.image";
-                        d.currentConfigGroup = Array("Wallpaper",
-                                                    "org.kde.image",
-                                                    "General");
-                        d.writeConfig("Image", "file:/home/$USER/Pictures/Wallpapers/wallhaven_T5_Shizuka_Hoshijiro.png")
-                    }}
-                '
+                #qdbus org.kde.plasmashell /PlasmaShell org.kde.PlasmaShell.evaluateScript '
+                #    var allDesktops = desktops();
+                #    print (allDesktops);
+                #    for (i=0;i<allDesktops.length;i++) {{
+                #        d = allDesktops[i];
+                #        d.wallpaperPlugin = "org.kde.image";
+                #        d.currentConfigGroup = Array("Wallpaper",
+                #                                    "org.kde.image",
+                #                                    "General");
+                #        d.writeConfig("Image", "file:/home/$USER/Pictures/Wallpapers/wallhaven_T5_Shizuka_Hoshijiro.png")
+                #    }}
+                #'
                 echo "Applying color scheme..."
                 mv Carl.colors "/home/$USER/.local/share/color-schemes"
                 echo "Installing icons..."
@@ -291,18 +291,17 @@ while true; do
                 sleep 0.2
                 mv Wallpapers "/home/$USER/Pictures/"
                 mv plasma-org.kde.plasma.desktop-appletsrc "/home/$USER/.config/"
-                qdbus org.kde.plasmashell /PlasmaShell org.kde.PlasmaShell.evaluateScript '
-                    var allDesktops = desktops();
-                    print (allDesktops);
-                    for (i=0;i<allDesktops.length;i++) {{
-                        d = allDesktops[i];
-                        d.wallpaperPlugin = "org.kde.image";
-                        d.currentConfigGroup = Array("Wallpaper",
-                                                    "org.kde.image",
-                                                    "General");
-                        d.writeConfig("Image", "file:/home/$USER/Pictures/Wallpapers/wallhaven_T5_Shizuka_Hoshijiro.png")
-                    }}
-                '
+#                qdbus org.kde.plasmashell /PlasmaShell org.kde.PlasmaShell.evaluateScript '
+ #                   var allDesktops = desktops();
+  #                  print (allDesktops);
+   ##                    d = allDesktops[i];
+     #                   d.wallpaperPlugin = "org.kde.image";
+      #                  d.currentConfigGroup = Array("Wallpaper",
+       #                                             "org.kde.image",
+        #                                            "General");
+         #               d.writeConfig("Image", "file:/home/$USER/Pictures/Wallpapers/wallhaven_T5_Shizuka_Hoshijiro.png")
+          #          }}
+           #     '
                 ;;
             4)s
                 echo "Installing Desktop..."
@@ -310,7 +309,8 @@ while true; do
                 mv plasma-org.kde.plasma.desktop-appletsrc "/home/$USER/.config/"
                 ;;
             5)
-                echo "Installing starship shell..."
+                echo "Installing starship shell config..."
+                sudo pacman -S --no-comfirm starship
                 mv starship.toml "/home/$USER/.config/"
                 ;;
             6)
@@ -328,7 +328,7 @@ done
 
 echo "Installed successfully!"
 
-read -p "You need to reboot to apply changes, do you want to reboot now? (y/n): " answer
+read -r -p "You need to reboot to apply changes, do you want to reboot now? (y/n): " answer
 
 if [ "$answer" == "y" ]; then
     echo "Rebooting..."
