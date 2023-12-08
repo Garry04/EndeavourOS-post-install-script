@@ -1,6 +1,8 @@
 #!/bin/bash
 c1="\e[38;5;63m"
 gray="\e[38;5;242m"
+green='\033[0;32m'
+white='\033[0m'
 
 endeavour_logo="
       ${c1}/\\
@@ -162,7 +164,7 @@ fi
 
 
 # Array of packages to install
-packages=("lutris" "vlc" "neofetch" "kfind" "ufw" "gufw" "rkhunter" "flameshot" "starship" "mesa" "curl" "wget" "tar")
+packages=("lutris" "vlc" "neofetch" "kfind" "ufw" "gufw" "rkhunter" "flameshot" "curl" "wget" "tar" "ldns")
 
 parPack=( "qbittorrent" "discord" "librewolf" "heroic-games-launcher" "protonup-qt" "timeshift-autosnap")
 
@@ -182,15 +184,44 @@ echo "Packages installed successfully!"
 sleep .5
 echo "Now applying config"
 
+
+##########################
+#INSTALLING SECURITY SHIT#
+##########################
+
+command_exists() {
+    command -v "$1" >/dev/null 2>&1
+}
+
+# Check if ufw is installed
+if command_exists ufw; then
+    echo "ufw is already installed."
+else
+    echo "ufw is not installed. Installing ufw..."
+    sudo pacman -S --noconfirm ufw gufw
+fi
+
+# Check if firewalld is installed
+if command_exists firewalld; then
+    echo "firewalld is already installed."
+else
+    echo "firewalld is not installed. Installing firewalld..."
+    sudo pacman -S --noconfirm firewalld
+    sudo systemctl enable --now firewalld
+fi
+
+echo "Firewall setup complete."
+
+
 #install config
 while true; do
     echo "Choose customization options (enter the corresponding numbers, separate with spaces):"
-    echo "1. Full - install everything"
-    echo "2. Bash config - installs custom bashrc with improved ls and aliases"
-    echo "3. Wallpapers - installs a few wallpapers"
-    echo "4. Desktop - installs my kde desktop config, conky, taskbar etc.."
-    echo "5. starship shell - installs a custom starship shell"
-    echo "6. neofetch config - installs a custom neofetch config"
+    echo -e "1. Full - install everything"
+    echo -e "2. Bash config - installs custom bashrc with improved ls and aliases"
+    echo -e "3. Wallpapers - installs a few wallpapers"
+    echo -e "4. Desktop - installs my kde desktop config, conky, taskbar etc.."
+    echo -e "5. starship shell - installs a custom starship shell"
+    echo -e "6. neofetch config - installs a custom neofetch config"
 
     read -p "Enter the numbers of the customization options you want to install (1-6): " customization_choices
 
@@ -219,14 +250,17 @@ while true; do
         case $choice in
             1)
                 echo "Installing Full customization..."
-                # Add commands for full customization...
-                ;;
-            2)
-                echo "Installing Bash config..."
+
+                echo "Applying kwin settings & taskbar settings..."
+                mv kwinrc "/home/$USER/.config/"
+                mv plasma-org.kde.plasma.desktop-appletsrc "/home/$USER/.config/"
+                echo "Applying all terminal configs..."
+                sudo pacman -S starship
+                mv starship.toml "/home/$USER/.config/"
                 mv .bashrc "/home/$USER/"
-                ;;
-            3)
-                echo "Installing Wallpapers..."
+                mv config.conf "/home/$USER/.config/neofetch/"
+                echo "Installing wallpapers in /Pictures/Wallpapers..."
+                sleep 0.2
                 mv Wallpapers "/home/$USER/Pictures/"
                 qdbus org.kde.plasmashell /PlasmaShell org.kde.PlasmaShell.evaluateScript '
                     var allDesktops = desktops();
@@ -240,10 +274,40 @@ while true; do
                         d.writeConfig("Image", "file:/home/$USER/Pictures/Wallpapers/wallhaven_T5_Shizuka_Hoshijiro.png")
                     }}
                 '
+                echo "Applying color scheme..."
+                mv Carl.colors "/home/$USER/.local/share/color-schemes"
+                echo "Installing icons..."
+                $aur -S --noconfirm eza ugrep
+                $aur -S --noconfirm kora-icon-theme
                 ;;
-            4)
+            2)
+                echo "Installing Bash config..."
+                mv .bashrc "/home/$USER/"
+                $aur -S --noconfirm eza ugrep
+
+                ;;
+            3)
+                echo "Installing Wallpapers in /Pictures/Wallpapers..."
+                sleep 0.2
+                mv Wallpapers "/home/$USER/Pictures/"
+                mv plasma-org.kde.plasma.desktop-appletsrc "/home/$USER/.config/"
+                qdbus org.kde.plasmashell /PlasmaShell org.kde.PlasmaShell.evaluateScript '
+                    var allDesktops = desktops();
+                    print (allDesktops);
+                    for (i=0;i<allDesktops.length;i++) {{
+                        d = allDesktops[i];
+                        d.wallpaperPlugin = "org.kde.image";
+                        d.currentConfigGroup = Array("Wallpaper",
+                                                    "org.kde.image",
+                                                    "General");
+                        d.writeConfig("Image", "file:/home/$USER/Pictures/Wallpapers/wallhaven_T5_Shizuka_Hoshijiro.png")
+                    }}
+                '
+                ;;
+            4)s
                 echo "Installing Desktop..."
-                # Add commands for desktop...
+                mv kwinrc "/home/$USER/.config/"
+                mv plasma-org.kde.plasma.desktop-appletsrc "/home/$USER/.config/"
                 ;;
             5)
                 echo "Installing starship shell..."
@@ -260,16 +324,15 @@ while true; do
     echo "Customization installation complete."
     break
 done
-#mv .bashrc "/home/$USER/"
-#mv config.conf "/home/$USER/.config/neofetch/"
-#mv starship.toml "/home/$USER/.config/"
-#mv Wallpapers "/home/$USER/Pictures/"
-
-#apply wallpaper
-
-
-
 
 
 echo "Installed successfully!"
-echo "Reboot to apply changes."
+
+read -p "You need to reboot to apply changes, do you want to reboot now? (y/n): " answer
+
+if [ "$answer" == "y" ]; then
+    echo "Rebooting..."
+    #reboot
+else
+    echo "You chose not to reboot. Changes will take effect after the next restart."
+fi
