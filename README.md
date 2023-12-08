@@ -15,4 +15,5 @@ Credit: dylanaraps (ascii art)
 - Numlock enabled by default
 
 
+## PREVIEW
 ![kde](https://github.com/Garry04/EndeavourOS-post-install-script/assets/54540935/a156c3dc-41cb-4df8-8c84-01dcfbc43baa)
