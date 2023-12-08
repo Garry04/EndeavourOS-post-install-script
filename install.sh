@@ -4,7 +4,7 @@
 ##ENDEAVOUR INSTALL SCRIPT##
 ############################
 # By Garry
-
+# ascii art by jschx https://gitlab.com/jschx
 
 
 version="0.1"
@@ -16,7 +16,6 @@ white='\033[0m'
 red="\e[31m"
 resetC="\e[0m"
 
-#ascii art by dylanaraps
 endeavour_logo="
       ${c1}/\\
     ${c1}//  \\
@@ -457,7 +456,7 @@ while true; do
     clear
     echo "Choose customization options (e.g., 1, 2 3):"
     echo -e "1. Full ${red}(KDE)- ${gray}install everything${resetC}"
-    echo -e "2. Bash config - ${gray}installs custom bashrc with improved ls and aliases${resetC}"
+    echo -e "2. Bash config - ${gray}installs custom bashrc with improved ls and grep and usefull aliases${resetC}"
     echo -e "3. Wallpapers - ${gray}installs a few wallpapers${resetC}"
     echo -e "4. Desktop ${red} - ${gray}installs my kde desktop config, conky, taskbar etc..${resetC}"
     echo -e "5. starship shell - ${gray}installs a custom starship shell"
