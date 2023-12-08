@@ -11,6 +11,7 @@ Credit: dylanaraps (ascii art)
 - Various performance and latency improvements
 - Customization options
 - Installs necessary GPU drivers (Except for Nvidia at the moment)
-- Sets dns servers to only use secure ones to prevent malicius dns servers
+- Sets dns servers to only use secure ones to prevent malicious dns servers
 
-![kde](https://github.com/Garry04/EndeavourOS-post-install-script/assets/54540935/3b7ba89e-9170-4eb6-991b-fb0f4fe86479)
+
+![kde](https://github.com/Garry04/EndeavourOS-post-install-script/assets/54540935/a156c3dc-41cb-4df8-8c84-01dcfbc43baa)
