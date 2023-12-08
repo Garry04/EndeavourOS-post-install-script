@@ -13,9 +13,16 @@ ${c1}/_${c1}/___-- __-
  ${c1}/____--
 \e[0m"
 
-echo -e "$endeavour_logo"
+arch_logo="
 
-
+${c1}       /\\
+${c1}      /  \\
+${c1}     /\\  \\
+${c1}    /      \\
+${c1}   /   ,,   \\
+${c1}  /   |  |  -\\
+${c1} /_-''    ''-_\\
+\e[0m"
 
 username=$(whoami)
 echo "Hello, $username :3"
@@ -25,10 +32,11 @@ sleep 0.2
 if [ -e /etc/os-release ]; then
     source /etc/os-release
     if [ "$ID" == "endeavouros" ]; then
-        echo " "
+        echo -e "$arch_logo"
     else
         # Message for other distributions
         echo -e "\e[1;31mEndeavourOS wasn't detected! This script hasnt been tested on other Arch based distributions use at your own risk.\e[0m"
+        echo -e "$arch_logo"
     fi
 else
     echo -e "\e[1;31mEndeavourOS wasn't detected! This script hasnt been tested on other Arch based distributions use at your own risk.\e[0m"
