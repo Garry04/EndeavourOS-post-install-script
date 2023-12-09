@@ -1,4 +1,4 @@
-# Arch Post Install Script
+# Arch Post Install Script (UNDER DEVELOPMENT)
 
 **THIS SCRIPT IS UNDER DEVELOPMENT. DO NOT USE IT!**
 
