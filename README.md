@@ -17,4 +17,5 @@ Credit: [jschx](https://gitlab.com/jschx) (ascii art)
 
 
 ## PREVIEW
-![kde](https://github.com/Garry04/EndeavourOS-post-install-script/assets/54540935/a156c3dc-41cb-4df8-8c84-01dcfbc43baa)
+![kde](https://github.com/Garry04/EndeavourOS-post-install-script/assets/54540935/c6bfc012-ecb0-4721-8352-ed17bdbe75bb)
+![terminal](https://github.com/Garry04/EndeavourOS-post-install-script/assets/54540935/a2c1fbd0-d969-4cf4-b78f-bcbc4de45560)
