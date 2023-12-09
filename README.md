@@ -1,4 +1,4 @@
-# EndeavourOS Post Install Script
+# Arch Post Install Script
 
 **THIS SCRIPT IS UNDER DEVELOPMENT. DO NOT USE IT!**
 
@@ -6,7 +6,7 @@ Credit: [jschx](https://gitlab.com/jschx) (ascii art)
 
 
 ## NOTE
-**This script is made for EndeavourOS and hasn't been tested on other Arch-based distributions. Currently, it doesn't have support for Nvidia drivers, but I'm working on fixing this. Everything else should install just fine.**
+**This script is made for any Arch-based distributions but has only been tested on Arch and EndeavourOS. Currently, it doesn't have support for installing Nvidia drivers, but I'm working on fixing this.**
 
 ## FEATURES
 - Various performance and latency improvements (Optional)
