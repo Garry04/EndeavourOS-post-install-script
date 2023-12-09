@@ -5,4 +5,4 @@
 - auo numlock
 - firewalld config
 - detect if user is using bluethooth
-- custom section add functions for each chhoice
+. detect if user is using kde to make sure it doesnt install/move non needed shit

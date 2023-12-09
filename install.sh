@@ -186,16 +186,16 @@ clear
 install_terminal() {
     case $1 in
         1)
-            echo "Installing xterm..."
-            sudo pacman -S xterm
+            echo "Installing alacritty..."
+            sudo pacman -S alacritty
             ;;
         2)
             echo "Installing kitty..."
             sudo pacman -S kitty
             ;;
         3)
-            echo "Installing alacritty..."
-            sudo pacman -S alacritty
+            echo "Installing xterm..."
+            sudo pacman -S xterm
             mv alacritty.yml "/home/$USER/.config/alacritty/"
             ;;
         4)
@@ -213,9 +213,9 @@ install_terminal() {
 while true; do
     # Display menu to the user
     echo "Select a terminal to install:"
-    echo "1. xterm"
-    echo "2. kitty"
-    echo "3. alacritty"
+    echo "1. alacritty - ${gray}Highly customizable terminal with high performance written in Rust${resetC}"
+    echo "2. kitty - ${gray}Highly customizable GPU based terminal written in Python${resetC}"
+    echo "3. xterm - ${gray}GPU-accelerated terminal with theming and addons written in TypeScript${resetC}"
     echo "4. none"
 
     # Read user input
@@ -318,6 +318,7 @@ echo "Now applying config"
 ##########################
 #INSTALLING SECURITY SHIT#
 ##########################
+
 echo "Installing firewall..."
 command_exists() {
     command -v "$1" >/dev/null 2>&1
@@ -562,7 +563,6 @@ function askQuestion() {
     done
 }
 
-# Ask the first question
 askQuestion "Do you want to install performance and latency tweaks? (y/n/?): " "[YyNn?]" "Y"
 
 case $input in
@@ -586,8 +586,6 @@ case $input in
         ;;
 esac
 
-# Continue with the rest of your script here
-echo "Rest o
 
 echo "Installed successfully!"
 
