@@ -1,5 +1,10 @@
 #!/bin/bash
 
+
+
+
+# credit jschx (ascii art) https://gitlab.com/jschx
+
 c1="\e[38;5;63m"
 gray="\e[38;5;242m"
 green='\033[0;32m'
