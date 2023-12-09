@@ -1,11 +1,11 @@
 #!/bin/bash
 
-############################
-##ENDEAVOUR INSTALL SCRIPT##
-############################
-# By Garry
-# ascii art by jschx https://gitlab.com/jschx
-
+c1="\e[38;5;63m"
+gray="\e[38;5;242m"
+green='\033[0;32m'
+white='\033[0m'
+red="\e[31m"
+resetC="\e[0m"
 
 version="0.1"
 
@@ -36,10 +36,8 @@ ${c1}  /   |  |  -\\
 ${c1} /_-''    ''-_\\
 \e[0m"
 
-username=$(whoami)
-echo "Hello, $username :3"
-echo -e "${gray}$version"
-sleep 0.5
+introText="ENDEAVOUROS POST-INSTALL SCRIPT"
+
 
 if [ -e /etc/os-release ]; then
     source /etc/os-release
@@ -47,14 +45,29 @@ if [ -e /etc/os-release ]; then
         echo -e "$endeavour_logo"
     else
         # Message for other distributions
-        echo -e "\e[1;31mEndeavourOS wasn't detected! This script hasnt been tested on other Arch based distributions use at your own risk.\e[0m"
+        echo -e "\e[1;31mEndeavourOS wasn't detected! This script hasn't been tested on other Arch-based distributions. Use at your own risk.\e[0m"
         echo -e "$arch_logo"
     fi
 else
-    echo -e "\e[1;31mEndeavourOS wasn't detected! This script hasnt been tested on other Arch based distributions use at your own risk.\e[0m"
+    echo -e "\e[1;31mEndeavourOS wasn't detected! This script hasn't been tested on other Arch-based distributions. Use at your own risk.\e[0m"
 fi
 
-# add nvidia support
+username=$(whoami)
+#echo "Hello, $username :3"
+echo -e "${gray}Version $version${resetC}"
+
+
+read -p "Do you want to continue the script? (y/n): " choice
+if [ -z "$choice" ] || [ "$choice" == "y" ]; then
+    clear
+    echo "Continuing with the script..."
+    # Add your script logic here
+else
+    clear
+    echo "Exiting the script."
+fi
+
+# Add nvidia support
 # Check if NVIDIA GPU is present
 if lspci | grep -i nvidia &> /dev/null; then
     echo -e "\e[1;31mNVIDIA GPU detected, no nvidia drivers were installed currently working on adding this meanwhile please go to https://wiki.archlinux.org/title/NVIDIA\e[0m"
@@ -68,11 +81,11 @@ elif lspci | grep -i amd &> /dev/null; then
 
 else
     echo "No NVIDIA or AMD GPU detected."
+    
 fi
 clear
 installParu() {
     echo "Installing paru..."
-    # Add the command to install paru here
     sudo pacman -S --needed base-devel
     git clone https://aur.archlinux.org/paru.git
     cd paru
@@ -82,7 +95,6 @@ installParu() {
 # Function to install yay
 installYay() {
     echo "Installing yay..."
-    # Add the command to install yay here
     sudo pacman -S yay
 }
 
@@ -283,7 +295,7 @@ done
 
 
 # Array of packages to install
-packages=("lutris" "vlc" "neofetch" "kfind" "flameshot" "curl" "wget" "tar")
+packages=("lutris" "vlc" "neofetch" "kfind" "flameshot" "curl" "wget" "tar" "xdotool")
 
 parPack=( "qbittorrent" "discord" "librewolf" "heroic-games-launcher" "protonup-qt" "timeshift-autosnap")
 
@@ -417,7 +429,7 @@ confWall() {
 #                qdbus org.kde.plasmashell /PlasmaShell org.kde.PlasmaShell.evaluateScript '
  #                   var allDesktops = desktops();
   #                  print (allDesktops);
-   ##                    d = allDesktops[i];
+   #                    d = allDesktops[i];
      #                   d.wallpaperPlugin = "org.kde.image";
       #                  d.currentConfigGroup = Array("Wallpaper",
        #                                             "org.kde.image",
@@ -517,6 +529,65 @@ while true; do
     break
 done
 
+##################################
+# PERFORMANCE AND LATENCY TWEAKS #
+##################################
+
+
+function gamingTweaks() {
+    # Your gaming tweaks implementation here
+    echo "Performing gaming tweaks..."
+}
+
+function askQuestion() {
+    local question=$1
+    local valid_inputs=$2
+    local default_input=$3
+
+    while true; do
+        read -r -p "$question" input
+
+        case $input in
+            "")
+                input=$default_input
+                break
+                ;;
+            $valid_inputs)
+                break
+                ;;
+            *)
+                echo "Invalid input. Please enter $valid_inputs."
+                ;;
+        esac
+    done
+}
+
+# Ask the first question
+askQuestion "Do you want to install performance and latency tweaks? (y/n/?): " "[YyNn?]" "Y"
+
+case $input in
+    [Yy])
+        gamingTweaks
+        ;;
+    [Nn])
+        echo "Skipping gaming tweaks."
+        ;;
+    "?")
+        echo "This option installs performance and latency tweaks for gaming."
+        askQuestion "Do you want to continue? (y/n): " "[YyNn]" "Y"
+        case $input in
+            [Yy])
+                gamingTweaks
+                ;;
+            *)
+                echo "Skipping gaming tweaks."
+                ;;
+        esac
+        ;;
+esac
+
+# Continue with the rest of your script here
+echo "Rest o
 
 echo "Installed successfully!"
 
