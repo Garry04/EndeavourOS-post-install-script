@@ -6,3 +6,4 @@
 - firewalld config
 - detect if user is using bluethooth
 . detect if user is using kde to make sure it doesnt install/move non needed shit
+- at the end show amount  packages installed and size and save to text file

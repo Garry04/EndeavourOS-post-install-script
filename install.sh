@@ -41,7 +41,7 @@ ${c1}  /   |  |  -\\
 ${c1} /_-''    ''-_\\
 \e[0m"
 
-introText="ENDEAVOUROS POST-INSTALL SCRIPT"
+introText="ARCH POST-INSTALL SCRIPT"
 
 
 if [ -e /etc/os-release ]; then
@@ -49,19 +49,21 @@ if [ -e /etc/os-release ]; then
     if [ "$ID" == "endeavouros" ]; then
         echo -e "$endeavour_logo"
     else
-        # Message for other distributions
-        echo -e "\e[1;31mEndeavourOS wasn't detected! This script hasn't been tested on other Arch-based distributions. Use at your own risk.\e[0m"
+    #    echo -e "\e[1;31mEndeavourOS wasn't detected! This script hasn't been tested on other Arch-based distributions. Use at your own risk.\e[0m"
         echo -e "$arch_logo"
     fi
 else
-    echo -e "\e[1;31mEndeavourOS wasn't detected! This script hasn't been tested on other Arch-based distributions. Use at your own risk.\e[0m"
+    echo -e "$arch_logo"
+   # echo -e "\e[1;31mEndeavourOS wasn't detected! This script hasn't been tested on other Arch-based distributions. Use at your own risk.\e[0m"
 fi
+
+echo -e "$introText"
 
 username=$(whoami)
 #echo "Hello, $username :3"
 echo -e "${gray}Version $version${resetC}"
 
-
+echo " "
 read -p "Do you want to continue the script? (y/n): " choice
 if [ -z "$choice" ] || [ "$choice" == "y" ]; then
     clear
@@ -73,7 +75,7 @@ else
 fi
 
 # Add nvidia support
-# Check if NVIDIA GPU is present
+# Check if nvidia GPU is present
 if lspci | grep -i nvidia &> /dev/null; then
     echo -e "\e[1;31mNVIDIA GPU detected, no nvidia drivers were installed currently working on adding this meanwhile please go to https://wiki.archlinux.org/title/NVIDIA\e[0m"
     echo "Script will continue in 8 seconds."
@@ -176,7 +178,6 @@ selectAurHelper() {
    
 }
 
-# Call the function to select AUR helper
 selectAurHelper
 
 echo "Selected AUR helper: $aur"
@@ -248,7 +249,6 @@ install_tool() {
 while true; do
     read -r -p "Do you want to install network tools? (y/n): " install_choice
 
-    # Default to "y" if the user presses Enter without providing any input
     install_choice=${install_choice:-"y"}
 
     if [[ $install_choice == "y" ]]; then
@@ -263,7 +263,6 @@ while true; do
             read -r -p "Enter the numbers of the tools you want to install (e.g., 1 2, 3): " choices
 
             if [[ -z $choices ]]; then
-                # If the user presses Enter with no input, default to installing the first option
                 choices="1"
             fi
 
@@ -482,7 +481,6 @@ while true; do
 
     read -r -p "Enter the numbers of the customization options you want to install (1-6): " customization_choices
 
-    # Check if all choices are valid
     valid_choices=true
     for choice in $customization_choices; do
         if [[ ! $choice =~ ^[1-4]$ ]]; then
@@ -496,13 +494,12 @@ while true; do
         continue
     fi
 
-    # Check if "Full" is selected along with any other options
     if [[ $customization_choices == *"1"* && $customization_choices != "1" ]]; then
         echo -e "\e[1;31mCannot select 'Full' along with other options. Please choose again.\e[0m"
         continue
     fi
 
-    # Process selected customization options
+    # customization options
     for choice in $customization_choices; do
         case $choice in
             1)
@@ -541,7 +538,6 @@ done
 
 
 function gamingTweaks() {
-    # Your gaming tweaks implementation here
     echo "Performing gaming tweaks..."
 }
 
