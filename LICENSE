@@ -1,4 +1,4 @@
-Copyright (c) 2015 J Schillinger
+The MIT License
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -17,3 +17,8 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
+
+This product includes software developed by the Free Software Foundation
+(http://www.fsf.org/).
+
+This file is also licensed under the GNU General Public License, version 3 (GPLv3) or any later version published by the Free Software Foundation. See http://www.gnu.org/licenses/ for details.
