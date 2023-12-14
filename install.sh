@@ -80,7 +80,6 @@ if lspci | grep -i nvidia &> /dev/null; then
     echo -e "\e[1;31mNVIDIA GPU detected, no nvidia drivers were installed currently working on adding this meanwhile please go to https://wiki.archlinux.org/title/NVIDIA\e[0m"
     echo "Script will continue in 8 seconds."
     sleep 8
-    # Add your NVIDIA-specific commands here
 elif lspci | grep -i amd &> /dev/null; then
     echo "AMD GPU detected, installing drivers..."
     sudo pacman -S vulkan-radeon lib32-vulkan-radeon lib32-mesa mesa libva-mesa-driver
@@ -99,7 +98,6 @@ installParu() {
     makepkg -si
 }
 
-# Function to install yay
 installYay() {
     echo "Installing yay..."
     sudo pacman -S yay
@@ -217,29 +215,24 @@ install_terminal() {
 
 # Loop to handle invalid choices
 while true; do
-    # Display menu to the user
     echo "Select a terminal to install:"
     echo "1. alacritty - ${gray}Highly customizable terminal with high performance written in Rust${resetC}"
     echo "2. kitty - ${gray}Highly customizable GPU based terminal written in Python${resetC}"
     echo "3. xterm - ${gray}GPU-accelerated terminal with theming and addons written in TypeScript${resetC}"
     echo "4. none"
 
-    # Read user input
     read -r -p "Enter the number of your choice: " choice
 
-    # Call the install_terminal function with the user's choice
     install_terminal "$choice"
 
-    # Check the return value of install_terminal
     if [ $? -eq 0 ]; then
-        break  # Break the loop if a valid choice is made
+        break 
     fi
 done
 
 
 
 clear
-# Function to install network tools
 install_tool() {
     tool=$1
     sudo pacman -S --noconfirm "$tool"
@@ -298,7 +291,7 @@ done
 
 
 
-# Array of packages to install
+# packages to install
 packages=("lutris" "vlc" "neofetch" "kfind" "flameshot" "curl" "wget" "tar" "xdotool")
 
 parPack=( "qbittorrent" "discord" "librewolf" "heroic-games-launcher" "protonup-qt" "timeshift-autosnap")
